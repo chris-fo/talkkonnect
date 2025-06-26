@@ -156,7 +156,7 @@ func Init(file string, ServerIndex string) {
 			newConfigPath := Config.Global.Software.AutoProvisioning.SaveFilePath + Config.Global.Software.AutoProvisioning.SaveFilename
 			log.Printf("info: Loading provisioned config from: %s", newConfigPath)
 			ConfigXMLFile = newConfigPath
-			readxmlconfig(ConfigXMLFile, false)
+			readxmlconfig(ConfigXMLFile, true)
 		}
 	}
 
