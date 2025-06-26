@@ -825,6 +825,38 @@ var (
 var StreamTracker = map[uint32]streamTrackerStruct{}
 var DMOSetup sa818.DMOSetupStruct
 
+func populateGlobalAccountVars(cfg *ConfigStruct) {
+	Name = []string{}
+	Server = []string{}
+	Username = []string{}
+	Password = []string{}
+	Insecure = []bool{}
+	Register = []bool{}
+	Certificate = []string{}
+	Channel = []string{}
+	Ident = []string{}
+	Tokens = []gumble.AccessTokens{}
+	VT = []VTStruct{}
+	AccountCount = 0
+
+	for _, account := range cfg.Accounts.Account {
+		if account.Default {
+			Name = append(Name, account.Name)
+			Server = append(Server, account.ServerAndPort)
+			Username = append(Username, account.UserName)
+			Password = append(Password, account.Password)
+			Insecure = append(Insecure, account.Insecure)
+			Register = append(Register, account.Register)
+			Certificate = append(Certificate, account.Certificate)
+			Channel = append(Channel, account.Channel)
+			Ident = append(Ident, account.Ident)
+			Tokens = append(Tokens, account.Tokens.Token)
+			VT = append(VT, VTStruct(account.Voicetargets))
+			AccountCount++
+		}
+	}
+}
+
 func readxmlconfig(file string, reloadxml bool) error {
 	var ReConfig ConfigStruct
 
@@ -851,24 +883,12 @@ func readxmlconfig(file string, reloadxml bool) error {
 	CheckConfigSanity(reloadxml)
 
 	if !reloadxml {
-		for _, account := range Config.Accounts.Account {
-			if account.Default {
-				Name = append(Name, account.Name)
-				Server = append(Server, account.ServerAndPort)
-				Username = append(Username, account.UserName)
-				Password = append(Password, account.Password)
-				Insecure = append(Insecure, account.Insecure)
-				Register = append(Register, account.Register)
-				Certificate = append(Certificate, account.Certificate)
-				Channel = append(Channel, account.Channel)
-				Ident = append(Ident, account.Ident)
-				Tokens = append(Tokens, account.Tokens.Token)
-				VT = append(VT, VTStruct(account.Voicetargets))
-				//ListenChannelNameList = append(ListenChannelNameList, account.Listentochannels.ChannelNames...)
-				AccountCount++
-			}
-		}
+		populateGlobalAccountVars(&Config)
+	} else {
+		Config = ReConfig
+		populateGlobalAccountVars(&Config)
 	}
+
 	for _, kMainCommands := range Config.Global.Hardware.Keyboard.Command {
 		if kMainCommands.Enabled {
 			if kMainCommands.Ttykeyboard.Enabled {
