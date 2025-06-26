@@ -153,8 +153,9 @@ func Init(file string, ServerIndex string) {
 		if err != nil {
 			FatalCleanUp("Error from AutoProvisioning Module " + err.Error())
 		} else {
-			log.Println("info: Loading XML Config")
-			ConfigXMLFile = file
+			newConfigPath := Config.Global.Software.AutoProvisioning.SaveFilePath + Config.Global.Software.AutoProvisioning.SaveFilename
+			log.Printf("info: Loading provisioned config from: %s", newConfigPath)
+			ConfigXMLFile = newConfigPath
 			readxmlconfig(ConfigXMLFile, false)
 		}
 	}
