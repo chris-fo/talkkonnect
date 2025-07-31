@@ -886,6 +886,7 @@ func readxmlconfig(file string, reloadxml bool) error {
 		populateGlobalAccountVars(&Config)
 	} else {
 		Config = ReConfig
+		log.Printf("debug: New Config: %v", Config)
 		populateGlobalAccountVars(&Config)
 	}
 
